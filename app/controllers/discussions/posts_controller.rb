@@ -8,7 +8,7 @@ module Discussions
 
       respond_to do |format|
         if @post.save
-          format.html { redirect_to discussions_path(@discussion), notice: "Post created" }
+          format.html { redirect_to discussion_path(@discussion), notice: "Post created" }
         else
           format.turbo_stream
           format.html { render :new, statius: :unprocessable_entity}
