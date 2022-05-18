@@ -9,6 +9,8 @@ class Discussion < ApplicationRecord
   after_update_commit -> { broadcast_replace_to :discussions }
   after_destroy_commit -> { broadcast_remove_to :discussions }
 
+  accepts_nested_attributes_for :posts
+
   def to_param
     "#{id}-#{name.downcase.to_s[0..100]}".parameterize
   end
