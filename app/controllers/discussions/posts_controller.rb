@@ -2,16 +2,39 @@ module Discussions
   class PostsController < ApplicationController
     before_action :authenticate_user!
     before_action :set_discussion
+    before_action :set_post, only: %i[show edit update]
+
+    def show; end
+
+    def edit; end
+
+    def update
+      
+
+      respond_to do |format|
+        # if @post.update(post_params)
+        #   format.turbo_stream {} # do not reload on update
+        #   format.html { redirect_to @post.discussion, notice: "Post update" }
+        # else
+        #   format.html { render :edit, status: :unprocessable_entity }
+        # end
+        if @post.update(post_params)
+          format.html { redirect_to @post.discussion, notice: 'Post updated' }
+        else
+          format.html { render :edit, statius: :unprocessable_entity }
+        end
+      end
+    end
 
     def create
       @post = @discussion.posts.new(post_params)
 
       respond_to do |format|
         if @post.save
-          format.html { redirect_to discussion_path(@discussion), notice: "Post created" }
+          format.html { redirect_to discussion_path(@discussion), notice: 'Post created' }
         else
           format.turbo_stream
-          format.html { render :new, statius: :unprocessable_entity}
+          format.html { render :new, statius: :unprocessable_entity }
         end
       end
     end
@@ -24,6 +47,10 @@ module Discussions
 
     def post_params
       params.require(:post).permit(:body)
+    end
+
+    def set_post
+      @post = @discussion.posts.find(params[:id])
     end
   end
 end
