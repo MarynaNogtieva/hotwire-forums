@@ -2,15 +2,13 @@ module Discussions
   class PostsController < ApplicationController
     before_action :authenticate_user!
     before_action :set_discussion
-    before_action :set_post, only: %i[show edit update]
+    before_action :set_post, only: %i[show edit update destroy]
 
     def show; end
 
     def edit; end
 
     def update
-      
-
       respond_to do |format|
         # if @post.update(post_params)
         #   format.turbo_stream {} # do not reload on update
@@ -36,6 +34,15 @@ module Discussions
           format.turbo_stream
           format.html { render :new, statius: :unprocessable_entity }
         end
+      end
+    end
+
+    def destroy
+      @post.destroy
+
+      respond_to do |format|
+        format.turbo_stream {} # do nothing with the response, let the cqallback delete the post
+        format.html { redirect_to @post.discussion, notice: 'Post deleted' }
       end
     end
 
