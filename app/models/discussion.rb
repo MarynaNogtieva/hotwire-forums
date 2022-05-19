@@ -8,10 +8,12 @@ class Discussion < ApplicationRecord
 
   validates :name, presence: true
 
+  broadcasts_to :category, inserts_by: :prepend
+
   # :discussions should be consistent with the name on the index view
-  after_create_commit -> { broadcast_prepend_to 'categories' }
-  after_update_commit -> { broadcast_replace_to 'categories' }
-  after_destroy_commit -> { broadcast_remove_to 'categories' }
+  after_create_commit -> { broadcast_prepend_to 'discussions' }
+  after_update_commit -> { broadcast_replace_to 'discussions' }
+  after_destroy_commit -> { broadcast_remove_to 'discussion' }
 
   accepts_nested_attributes_for :posts
 
